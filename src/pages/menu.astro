@@ -16,6 +16,8 @@ const articles = (await getCollection("articles", (a) => a.data.publie))
 const article = articles[0];
 const grandes = articles.filter((a, i) => i === 0 || a.data.enGrand);
 const petites = articles.filter((a) => !grandes.includes(a));
+// au-delà de deux lignes de vignettes, le reste attend le bouton « anciennes news »
+const PAR_PAGE = 6;
 const corps = (a: (typeof articles)[number]) => withImageVariants(renderMarkdown(a.data.corps));
 const dateFr = (d: string) => new Date(`${d.slice(0, 10)}T12:00:00Z`).toLocaleDateString("fr-CH", { day: "numeric", month: "long", year: "numeric" });
 ---
@@ -59,17 +61,17 @@ const dateFr = (d: string) => new Date(`${d.slice(0, 10)}T12:00:00Z`).toLocaleDa
       })}
       {petites.length > 0 && (
         <div class="petites">
-          {petites.map((a) => {
+          {petites.map((a, i) => {
             const cover = a.data.image ? image(a.data.image) : null;
             const html = corps(a);
             return (
-              <details class="petite">
+              <details class="petite" data-suite={i >= PAR_PAGE ? "" : undefined}>
                 <summary>
-                  {cover && <img class="petite-image" src={cover.src} width={cover.w} height={cover.h} alt="" loading="lazy" />}
+                  {cover && <img class="petite-image" src={cover.thumb ?? cover.src} width={cover.w} height={cover.h} alt="" loading="lazy" decoding="async" />}
                   <p class="news-date"><time datetime={a.data.date}>{dateFr(a.data.date)}</time></p>
                   <h3>{a.data.titre}</h3>
                   {/* début du texte, sans liens : rien de cliquable dans le résumé */}
-                  <p class="extrait" set:html={html.replace(/<[^>]+>/g, " ")} />
+                  <p class="extrait" set:html={html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim()} />
                 </summary>
                 {cover && <img class="news-image" src={cover.src} width={cover.w} height={cover.h} alt="" loading="lazy" />}
                 <div class="vjm-prose" set:html={html} />
@@ -77,6 +79,11 @@ const dateFr = (d: string) => new Date(`${d.slice(0, 10)}T12:00:00Z`).toLocaleDa
             );
           })}
         </div>
+      )}
+      {petites.length > PAR_PAGE && (
+        <button type="button" class="voir-plus" onclick="this.previousElementSibling.classList.add('tout');this.remove()">
+          anciennes news ({petites.length - PAR_PAGE})
+        </button>
       )}
     </section>
   )}
@@ -122,27 +129,42 @@ const dateFr = (d: string) => new Date(`${d.slice(0, 10)}T12:00:00Z`).toLocaleDa
     font-size: clamp(1.8rem, 4vw, 2.6rem); line-height: 1.15; margin: 12px 0 var(--block-gap);
   }
   .news-image { display: block; width: 100%; height: auto; margin-bottom: var(--block-gap); }
-  /* anciennes news : 3 vignettes par ligne ; une vignette ouverte prend toute la ligne */
+  /* anciennes news : 3 vignettes par ligne (2 en tablette, 1 en téléphone) ; une vignette ouverte prend toute la ligne */
   .petites {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 190px), 1fr)); gap: 40px 28px;
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 44px 28px; align-items: start;
     margin-top: clamp(64px, 12vh, 140px);
   }
-  .petite summary { list-style: none; cursor: pointer; opacity: 0.85; transition: opacity 0.25s; }
+  @media (max-width: 720px) { .petites { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 36px 20px; } }
+  @media (max-width: 440px) { .petites { grid-template-columns: minmax(0, 1fr); } }
+  .petites:not(.tout) [data-suite] { display: none; }
+  .petite summary { display: block; list-style: none; cursor: pointer; opacity: 0.85; transition: opacity 0.25s; }
   .petite summary::-webkit-details-marker { display: none; }
   .petite summary:hover { opacity: 1; }
   .petite summary:focus-visible { outline: 1px solid var(--fg-muted); outline-offset: 6px; }
-  .petite-image { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; margin-bottom: 10px; }
+  /* height:auto, sinon l'attribut height (taille réelle du fichier) l'emporte sur le 4:3 */
+  .petite-image { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; margin-bottom: 12px; background: var(--fg-subtle); }
+  .petite .news-date { margin: 0; }
   .petite h3 {
     font-family: var(--font-heading); font-weight: var(--heading-weight); letter-spacing: var(--heading-spacing);
-    font-size: 1.15rem; line-height: 1.25; margin: 6px 0;
+    font-size: 1.15rem; line-height: 1.25; margin: 6px 0 8px; overflow-wrap: anywhere;
   }
   .extrait {
-    font-size: 15px; color: var(--fg-muted); margin: 0;
-    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+    font-size: 15px; line-height: 1.45; color: var(--fg-muted); margin: 0;
+    display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
   }
   .petite[open] { grid-column: 1 / -1; }
+  .petite[open] summary { opacity: 1; display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; column-gap: 16px; }
+  .petite[open] summary::after { content: "fermer ×"; order: -1; margin-left: auto; font-size: 14px; color: var(--fg-muted); }
+  .petite[open] .news-date { order: -2; }
+  .petite[open] h3 { flex-basis: 100%; font-size: clamp(1.8rem, 4vw, 2.6rem); line-height: 1.15; margin: 12px 0 var(--block-gap); }
   .petite[open] .petite-image, .petite[open] .extrait { display: none; }
-  .petite[open] h3 { font-size: clamp(1.8rem, 4vw, 2.6rem); line-height: 1.15; margin: 12px 0 var(--block-gap); }
+  .voir-plus {
+    display: block; margin: 56px auto 0; padding: 10px 22px; cursor: pointer;
+    background: none; border: 1px solid var(--fg-subtle); border-radius: 999px;
+    font-family: var(--font-body); font-size: 15px; letter-spacing: 0.06em; color: var(--fg-muted);
+    transition: color 0.25s, border-color 0.25s;
+  }
+  .voir-plus:hover, .voir-plus:focus-visible { color: var(--fg); border-color: var(--fg-muted); }
   @keyframes apparition { from { opacity: 0; } to { opacity: 1; } }
   @media (prefers-reduced-motion: reduce) { main, .defiler img { animation: none; } }
 </style>

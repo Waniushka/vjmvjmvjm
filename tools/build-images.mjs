@@ -179,7 +179,7 @@ export async function resolveImages(content, { root = "." } = {}) {
     }
   }
 
-  for (const a of content.articles || []) if (a.image) await b.image(a.image, { max: 1600 });
+  for (const a of content.articles || []) if (a.image) await b.image(a.image, { max: 1600, thumb: true });
   for (const key of ["bio", "news", "kinematik", "albums", "lecture", "articles"]) await resolveTextImages(content[key], b);
 
   // les listes brutes ne servent plus : seules les galeries résolues partent dans le bundle
