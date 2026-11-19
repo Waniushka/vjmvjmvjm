@@ -170,7 +170,7 @@ export async function resolveImages(content, { root = "." } = {}) {
   const aleas = await many(content.aleas, async (p) => (await b.image(p, { max: 1600 }))?.src);
 
   for (const film of content.kinematik) {
-    film.vignette = (await b.image(film.vignette || `assets/kinematik/${film.id}.jpg`, { max: 1280 }))?.src || null;
+    film.vignette = (await b.image(film.vignette || `assets/kinematik/${film.id}.jpg`, { max: 1280, thumb: true }))?.src || null;
   }
   for (const t of content.lecture) {
     if (t.vignette?.type === "image") {
