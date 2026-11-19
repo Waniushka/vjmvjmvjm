@@ -21,5 +21,11 @@ export const imageSrc = (path: string): string => image(path)?.src ?? asset(path
 export const kinematikImage = (film: { id: string; vignette?: string }) =>
   image(film.vignette || `assets/kinematik/${film.id}.jpg`);
 
-// Images collées dans un texte Markdown : `src="/assets/x.jpg"` → variante réduite du manifeste, comme l'ancien build.
-export const withImageVariants = (html: string): string => swapImageSrcs(html, (src) => entries[clean(src)]?.src);
+// Images collées dans un texte Markdown : `src="/assets/x.jpg"` → variante réduite du manifeste, comme l'ancien build,
+// plus ses dimensions (la page ne saute plus quand l'image arrive ; `.vjm-prose img` a `height: auto`).
+const bySrc = new Map(Object.values(entries).map((e) => [asset(e.src), e]));
+export const withImageVariants = (html: string): string =>
+  swapImageSrcs(html, (src) => entries[clean(src)]?.src).replace(/<img (?![^>]*\bwidth=)[^>]*?src="([^"]+)"/g, (tag, src: string) => {
+    const e = bySrc.get(src);
+    return e ? `${tag} width="${e.w}" height="${e.h}"` : tag;
+  });
