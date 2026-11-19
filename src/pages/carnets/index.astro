@@ -23,7 +23,7 @@ const vars = (i: number) => [
       {carnets.map((c, i) => (
         // Décalage en rouleau (pas indexé sur la position absolue) : 117 images, la dernière attendrait des secondes.
         <div data-reveal style={`transition-delay:${(i % 8) * 50}ms`}>
-          <a href={`/carnets/${c.slug}`} class="tuile" style={vars(i)} aria-label={c.title ? undefined : c.slug}>
+          <a href={`/carnets/${c.slug}`} class="tuile" style={vars(i)} aria-label={c.title ? undefined : `Carnet ${c.slug.replace(/-/g, " ")}`}>
             {/* la vignette allégée : la version pleine est pour la page de l'image */}
             <img src={c.img.thumb || c.img.src} alt={c.title ?? ""} loading="lazy" width={c.img.w} height={c.img.h} />
             {c.title && <p>{c.title}</p>}
