@@ -12,6 +12,7 @@
 | News en grille + onglet menu + heure | DONE (captures desktop OK, téléphone non vérifié) | docs/features/news-grille-heure.md |
 | Site propre v1 — migration Astro (une URL par contenu, SEO) | DONE (fusionnée le 2026-10-20 ; recette et Search Console à faire par Jonathan) | docs/features/migration-astro.md |
 | Perf des pages (suite d'audit) | DONE (dettes listées dans la fiche) | docs/features/perf-pages.md |
+| Finitions SEO et a11y (suite d'audit) | DONE (dettes listées dans la fiche) | docs/features/finitions-seo-a11y.md |
 | Migration Netlify vers le compte de Vania (notifications du formulaire) | EN COURS (opérations par Jonathan) | docs/features/migration-netlify-vania.md |
 
 ## Cadre itération 2

@@ -46,11 +46,8 @@ Aucune. Les vignettes sont générées au build (`npm run build`).
 | Navigateur | Chrome headless sur `astro preview` | accueil 1 photo, bio 1 portrait, menu ≡ s'ouvre après idle, kinematik en `-t.jpg`, aucune erreur console (rapporté, non relancé) |
 
 ## Limites et dettes
+- Descriptions dupliquées, h1, clavier du lecteur audio, dimensions des images de prose et canonical de `carnets/[id]` : réglés, voir [finitions-seo-a11y.md](finitions-seo-a11y.md).
 - React reste chargé partout : le menu est à réécrire en vanilla pour le retirer.
 - Carnets : première rangée en lazy + opacity 0 (colonnes CSS, pas d'index fiable de la première rangée).
-- Meta descriptions dupliquées sur 141 pages ; h1 manquants.
-- `AudioPlayer` non accessible au clavier (`AudioPlayer.jsx:165`).
-- Images de prose sans `width/height` (`src/lib/content.ts:64`).
-- `carnets/[id]` : canonical vers `/carnets` et noindex se contredisent.
 - Vignette `k4.jpg` (Carte Postale de Montevidéo #1) entièrement noire à la source.
 - Sans JS, le portrait vient du seul `<noscript>` (premier portrait, pas d'aléa).

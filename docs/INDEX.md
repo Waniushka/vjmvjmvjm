@@ -5,6 +5,7 @@
 | Feature | Statut | Doc | Points d'entrée code |
 |---|---|---|---|
 | Migration Astro (site propre v1) | EN COURS | [features/migration-astro.md](features/migration-astro.md) | `src/layouts/Base.astro`, `src/content.config.ts`, `src/pages/` |
+| Finitions SEO et a11y (audit) | DONE | [features/finitions-seo-a11y.md](features/finitions-seo-a11y.md) | `src/islands/AudioPlayer.jsx`, `src/lib/images.ts`, `src/components/Page.astro` |
 | Perf des pages (audit) | DONE | [features/perf-pages.md](features/perf-pages.md) | `src/pages/index.astro`, `src/components/BioPage.astro`, `tools/build-images.mjs` |
 | Dernière news sous le menu + particules | DONE | [features/news-particules.md](features/news-particules.md) | `src/pages/menu.astro`, `src/islands/DotField.jsx`, `src/content.config.ts` |
 | News en grille (3/2/1 col., pagination) + onglet menu + heure | DONE | [features/news-grille-heure.md](features/news-grille-heure.md) | `src/pages/menu.astro`, `src/content.config.ts`, `public/admin/config.yml` |
