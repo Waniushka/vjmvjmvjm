@@ -9,10 +9,10 @@ import { itemList } from "../../lib/seo";
 
 const albums = await getCollection("albums");
 ---
-<Base title="Films pour les oreilles — Vania Jaikin Miyazaki" path="/films"
+<Base title="Films pour les oreilles — Vania Jaikin Miyazaki" path="/films" description="Films pour les oreilles : les créations sonores de Vania Jaikin Miyazaki, réalisatrice et productrice à Genève, à écouter en ligne."
   ld={{ ...itemList(albums.map((a) => ({ name: a.data.titre, url: `/films/${a.id}` }))), name: "Films pour les oreilles" }}>
   <Header />
-  <Page>
+  <Page titre="Films pour les oreilles">
     <BackLink href="/menu" />
     <div class="liste">
       {albums.map((a, i) => (

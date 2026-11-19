@@ -12,10 +12,10 @@ const textes = (await getCollection("lecture"))
   .filter((t) => t.data.publie)
   .sort((a, b) => a.data.ordre - b.data.ordre || a.data.titre.localeCompare(b.data.titre));
 ---
-<Base title="Coin lecture — Vania Jaikin Miyazaki" path="/lecture"
+<Base title="Coin lecture — Vania Jaikin Miyazaki" path="/lecture" description="Coin lecture : les textes de Vania Jaikin Miyazaki, réalisatrice et artiste à Genève, à lire en ligne."
   ld={{ ...itemList(textes.map((t) => ({ name: t.data.titre, url: `/lecture/${t.id}` }))), name: "Coin lecture" }}>
   <Header />
-  <Page>
+  <Page titre="Coin lecture">
     {/* la flèche suffit : pas de libellé, pas de titre */}
     <BackLink href="/menu" />
     <div class="colonnes">

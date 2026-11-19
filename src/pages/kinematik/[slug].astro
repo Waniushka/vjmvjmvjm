@@ -19,16 +19,19 @@ const { film, prev, next, count } = Astro.props;
 const v = film.data;
 const thumb = kinematikImage({ id: film.id, vignette: v.vignette })?.src;
 const info = !!(v.resume?.length || v.generique?.length);
+// repli : aucun film n'a encore d'information ni de résumé, sans ça les 21 pages partagent la description du site
+const desc = describe(v.information, v.resume) ?? `${v.titre}${v.sousTitre ? ` (${v.sousTitre})` : ""}, film de Vania Jaikin Miyazaki, ${v.annee}, ${v.trailer ? "trailer, " : ""}${v.duree}.`;
 ---
-<Base title={`${v.titre} — Vania Jaikin Miyazaki`} path={filmUrl(film)} description={describe(v.information, v.resume)} image={thumb}
+<Base title={`${v.titre} — Vania Jaikin Miyazaki`} path={filmUrl(film)} description={desc} image={thumb}
   ld={{
-    "@type": "VideoObject", name: v.titre, description: describe(v.information, v.resume) ?? v.titre,
+    "@type": "VideoObject", name: v.titre, description: desc,
     thumbnailUrl: thumb && abs(thumb), // Google veut une date complète ; le contenu ne donne que l'année
     uploadDate: `${v.annee}-01-01`, duration: isoDuration(v.duree),
     embedUrl: `https://player.vimeo.com/video/${v.vimeoId}`, url: abs(filmUrl(film)), inLanguage: "fr",
     director: await person(),
   }}>
   <Lightbox closeHref="/kinematik" label={v.titre} prevHref={count > 1 ? filmUrl(prev) : undefined} nextHref={count > 1 ? filmUrl(next) : undefined}>
+    <h1 class="sr-only">{v.titre}</h1>
     <div class="video">
       <iframe src={`https://player.vimeo.com/video/${v.vimeoId}${v.hash ? `?h=${v.hash}` : ""}`} title={v.titre}
         allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>

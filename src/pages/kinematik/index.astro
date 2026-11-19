@@ -26,10 +26,10 @@ const vars = (i: number) => {
   ].join(";");
 };
 ---
-<Base title="Kinematik — Vania Jaikin Miyazaki" path="/kinematik"
+<Base title="Kinematik — Vania Jaikin Miyazaki" path="/kinematik" description="Kinematik : les films et vidéos de Vania Jaikin Miyazaki, réalisatrice et productrice à Genève."
   ld={{ ...itemList(films.map((f) => ({ name: f.data.titre, url: filmUrl(f) }))), name: "Kinematik" }}>
   <Header />
-  <Page>
+  <Page titre="Kinematik">
     <BackLink href="/menu" />
     <div class="colonnes">
       {films.map((f, i) => {

@@ -1,10 +1,11 @@
 ---
 // Gabarit d'une page de contenu : colonne centrée sous l'en-tête ; `prose` = colonne de lecture de 780px ;
 // `bleed` = pleine largeur sous l'en-tête (contact).
-interface Props { variant?: "default" | "prose" | "bleed" }
-const { variant = "default" } = Astro.props;
+interface Props { variant?: "default" | "prose" | "bleed"; /* h1 invisible des pages sans titre affiché */ titre?: string }
+const { variant = "default", titre } = Astro.props;
 ---
 <main class:list={{ bleed: variant === "bleed" }}>
+  {titre && <h1 class="sr-only">{titre}</h1>}
   {variant === "prose" ? <div class="prose"><slot /></div> : <slot />}
 </main>
 <style>

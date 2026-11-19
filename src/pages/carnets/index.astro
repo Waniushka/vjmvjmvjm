@@ -14,10 +14,10 @@ const vars = (i: number) => [
   `--cadre:${rnd(i + 150) > 0.65 ? "1px solid var(--fg-subtle)" : "none"}`, `--pad:${rnd(i + 200) > 0.7 ? 6 : 0}px`,
 ].join(";");
 ---
-<Base title="Carnets de voyages — Vania Jaikin Miyazaki" path="/carnets"
+<Base title="Carnets de voyages — Vania Jaikin Miyazaki" path="/carnets" description="Carnets de voyages : les images de voyage de Vania Jaikin Miyazaki, artiste à Genève."
   ld={{ "@type": "ImageGallery", name: "Carnets de voyages", url: abs("/carnets"), image: carnets.map((c) => ({ "@type": "ImageObject", contentUrl: abs(c.img.src), ...(c.title && { name: c.title }) })) }}>
   <Header />
-  <Page>
+  <Page titre="Carnets de voyages">
     <BackLink href="/menu" />
     <div class="collage">
       {carnets.map((c, i) => (

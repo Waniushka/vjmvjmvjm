@@ -12,6 +12,7 @@ const paysages = photos.filter((i) => i.w / i.h > 1.15);
 const pool = (paysages.length ? paysages : photos).map((i) => i.src);
 ---
 <Base path="/" ld={[await person(), { "@type": "WebSite", "@id": `${SITE_URL}/#website`, url: `${SITE_URL}/`, name: NAME, inLanguage: "fr", publisher: { "@id": `${SITE_URL}/#person` } }]}>
+  <h1 class="sr-only">Vania Jaikin Miyazaki</h1>
   <a id="accueil" class="accueil" href="/menu" aria-label="Entrer" data-photos={JSON.stringify(pool)}>
     <span class="voile">
       <span class="icone"><img src="/assets/brand/nav-home.svg" alt="" aria-hidden="true" width="64" height="64" /></span>

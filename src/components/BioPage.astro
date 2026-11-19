@@ -25,7 +25,7 @@ const langs = [{ code: "fr", label: "FR", href: "/bio" }, { code: "en", label: "
   alternates={[{ hreflang: "fr", path: "/bio" }, { hreflang: "en", path: "/en/bio" }, { hreflang: "x-default", path: "/bio" }]}
   ld={{ "@type": "ProfilePage", url: abs(lang === "en" ? "/en/bio" : "/bio"), inLanguage: lang, mainEntity: await person() }}>
   <Header />
-  <Page>
+  <Page titre={lang === "en" ? "Biography" : "Bio"}>
     <div class="grille">
       <div class="texte">
         <div role="group" aria-label="Langue de la bio" class="langues">

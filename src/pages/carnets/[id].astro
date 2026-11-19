@@ -13,7 +13,7 @@ export async function getStaticPaths() {
 }
 const { c, prev, next, count } = Astro.props;
 ---
-<Base title={`${c.title ?? c.slug} — Carnets de voyages — Vania Jaikin Miyazaki`} path="/carnets">
+<Base title={`${c.title ?? c.slug} — Carnets de voyages — Vania Jaikin Miyazaki`} path={`/carnets/${c.slug}`}>
   {/* Une page par image, sans texte propre : on indexe la grille, pas ses 117 pages. */}
   <meta slot="head" name="robots" content="noindex" />
   <Lightbox closeHref="/carnets" label={c.title ?? c.slug} prevHref={count > 1 ? `/carnets/${prev.slug}` : undefined} nextHref={count > 1 ? `/carnets/${next.slug}` : undefined}>
