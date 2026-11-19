@@ -33,7 +33,7 @@ const secondary = [{ label: "news", href: "/menu#news" }, { label: "contact", hr
   <div class="left">
     <a href="/bio" class="name" title="Bio" aria-label="Vania Jaikin Miyazaki">
       <!-- Nom en capitales dessiné par Vania et détouré ; l'encre noire s'inverse en sombre. -->
-      <img src="/assets/brand/nom-manuscrit.png" alt="Vania Jaikin Miyazaki" />
+      <img src="/assets/brand/nom-manuscrit.png" alt="Vania Jaikin Miyazaki" width="1200" height="225" />
     </a>
     {items.map((news, i) => {
       const attrs = { "data-news": i, "data-debut": news.debut, "data-fin": news.fin, hidden: news !== first };
@@ -57,7 +57,7 @@ const secondary = [{ label: "news", href: "/menu#news" }, { label: "contact", hr
   </div>
 
   <div class="right">
-    <MenuDropdown client:load sections={sections} secondary={secondary} />
+    <MenuDropdown client:idle sections={sections} secondary={secondary} />
   </div>
 </header>
 
