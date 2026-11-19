@@ -39,15 +39,23 @@ const langs = [{ code: "fr", label: "FR", href: "/bio" }, { code: "en", label: "
         <div lang={lang} class="pro"><Blocks blocks={textes.pro} /></div>
         {site.bioOeilVisible && (
           <button type="button" class="oeil" data-bio-perso aria-label={lang === "en" ? "The other bio" : "L’autre bio"}>
-            <img src="/assets/brand/nav-eye-middle.svg" alt="" aria-hidden="true" />
+            <img src="/assets/brand/nav-eye-middle.svg" alt="" aria-hidden="true" width="46" height="46" />
           </button>
         )}
         <p class="email">{site.email}</p>
       </div>
       {portrait && (
         <div class="portrait">
-          <img id="bio-portrait" src={imageSrc(bio.portraits[0])} alt="Vania Jaikin Miyazaki" loading="lazy"
+          {/* pas de src dans le HTML : le portrait est tiré avant le premier rendu, un seul téléchargement */}
+          <img id="bio-portrait" alt="Vania Jaikin Miyazaki" fetchpriority="high"
             width={portrait.w} height={portrait.h} data-portraits={JSON.stringify(portraits)} />
+          <script is:inline data-astro-rerun>
+            (function () {
+              var img = document.getElementById("bio-portrait");
+              try { var pool = JSON.parse(img.dataset.portraits || "[]"); img.src = pool[Math.floor(Math.random() * pool.length)]; } catch (e) {}
+            })();
+          </script>
+          <noscript><img src={imageSrc(bio.portraits[0])} alt="Vania Jaikin Miyazaki" width={portrait.w} height={portrait.h} /></noscript>
         </div>
       )}
     </div>
@@ -63,17 +71,6 @@ const langs = [{ code: "fr", label: "FR", href: "/bio" }, { code: "en", label: "
     try { localStorage.setItem("vjm-bio-lang", lang); } catch (e) {}
   </script>
 </Base>
-<script>
-  /* Portrait tiré au hasard à chaque visite, comme l'ancien useMemo au montage de BioPage. */
-  document.addEventListener("astro:page-load", () => {
-    const img = document.getElementById("bio-portrait") as HTMLImageElement | null;
-    if (!img) return;
-    try {
-      const pool: string[] = JSON.parse(img.dataset.portraits || "[]");
-      if (pool.length) img.src = pool[Math.floor(Math.random() * pool.length)];
-    } catch {}
-  });
-</script>
 <style>
   .grille { display: grid; grid-template-columns: 1fr 0.8fr; gap: var(--block-gap); align-items: start; }
   .texte { max-width: 720px; }
