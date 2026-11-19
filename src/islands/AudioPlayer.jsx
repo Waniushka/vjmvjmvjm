@@ -117,8 +117,17 @@ export default function AudioPlayer({ tracks }) {
           </button>
           <div style={{ flex: 1, marginLeft: 12 }}>
             <p style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(19px, 1.8vw, 24px)', marginBottom: 14, fontWeight: 'var(--heading-weight, 400)' }}>{track.title}</p>
-            <div style={{ position: 'relative', height: 2, background: 'var(--border)', borderRadius: 1, cursor: 'pointer' }}
-              onClick={(e) => { const r = e.currentTarget.getBoundingClientRect(); seek(((e.clientX - r.left) / r.width) * track.sec); }}>
+            {/* slider clavier : ← → 10 s, Début/Fin ; la zone cliquable déborde la ligne de 2px */}
+            <div role="slider" tabIndex={0} aria-label="Position dans l'épisode"
+              aria-valuemin={0} aria-valuemax={Math.round(track.sec || 0)} aria-valuenow={Math.round(elapsed)}
+              aria-valuetext={`${mm} min ${ss} s sur ${track.duration}`}
+              style={{ position: 'relative', height: 2, background: 'var(--border)', borderRadius: 1, cursor: 'pointer', outlineOffset: 6 }}
+              onClick={(e) => { const r = e.currentTarget.getBoundingClientRect(); seek(((e.clientX - r.left) / r.width) * track.sec); }}
+              onKeyDown={(e) => {
+                const to = { ArrowRight: elapsed + 10, ArrowUp: elapsed + 10, ArrowLeft: elapsed - 10, ArrowDown: elapsed - 10, Home: 0, End: track.sec }[e.key];
+                if (to === undefined) return;
+                e.preventDefault(); seek(Math.max(0, Math.min(track.sec, to)));
+              }}>
               <div style={{ position: 'absolute', left: 0, top: 0, height: '100%', background: 'var(--fg)', borderRadius: 1, width: `${progress}%`, transition: 'width 0.08s linear' }}></div>
             </div>
             {/* écoulé, puis les sauts juste après, la durée poussée à droite */}
@@ -162,26 +171,30 @@ function TrackRow({ track, index, current, playing, onSelect }) {
     fontVariantNumeric: 'tabular-nums',
   };
   return (
-    <div onClick={onSelect} onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
+    <button type="button" onClick={onSelect} aria-current={current || undefined}
+      aria-label={`${playing && current ? 'En lecture' : 'Écouter'} : ${track.title}, ${track.duration}`}
+      onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
+      onFocus={() => setHov(true)} onBlur={() => setHov(false)}
       style={{
+        width: '100%', background: 'none', border: 'none', color: 'inherit', font: 'inherit', textAlign: 'left',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
         padding: 'clamp(14px, 1.8vw, 22px) 0',
         cursor: 'pointer', opacity: on ? 1 : 0.55,
         paddingLeft: hov ? 6 : 0,
         transition: 'opacity 0.25s, padding-left 0.25s',
       }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+      <span style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
         <span style={{ ...meta, width: 26, textAlign: 'right' }}>{String(index + 1).padStart(2, '0')}</span>
         <span style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(17px, 1.6vw, 21px)', fontWeight: 'var(--heading-weight, 400)' }}>{track.title}</span>
-      </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+      </span>
+      <span style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
         <span style={{
           width: 14, height: 14, display: 'flex', alignItems: 'center', justifyContent: 'center',
           color: current && playing ? 'var(--fg)' : 'var(--fg-muted)',
           opacity: on ? 1 : 0.4, transition: 'opacity 0.25s, color 0.25s',
         }}><TrackPlayIcon active={current && playing} /></span>
         <span style={meta}>{track.duration}</span>
-      </div>
-    </div>
+      </span>
+    </button>
   );
 }
